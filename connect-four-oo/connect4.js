@@ -6,11 +6,13 @@
  */
 
 class Game {
-  constructor(height, width) {
+  constructor(height, width, player1, player2) {
     this.height = height;
     this.width = width;
     this.board = [];
-    this.currPlayer = 1;
+    this.player1 = player1;
+    this.player2 = player2;
+    this.currPlayer = player1;
     this.makeBoard();
     this.makeHtmlBoard();
   }
@@ -70,7 +72,9 @@ class Game {
   placeInTable(y, x) {
     const piece = document.createElement('div');
     piece.classList.add('piece');
-    piece.classList.add(`p${this.currPlayer}`);
+    console.log(this.currPlayer)
+    // piece.classList.add(`p${this.currPlayer}`);
+    piece.style.backgroundColor = this.currPlayer.color;
     piece.style.top = -50 * (y + 2);
   
     const spot = document.getElementById(`${y}-${x}`);
@@ -99,7 +103,7 @@ class Game {
     
     // check for win
     if (this.checkForWin()) {
-      return this.endGame(`Player ${this.currPlayer} won!`);
+      return this.endGame(`Player ${this.currPlayer.number} won!`);
     }
     
     // check for tie
@@ -108,7 +112,7 @@ class Game {
     }
       
     // switch players
-    this.currPlayer = this.currPlayer === 1 ? 2 : 1;
+    this.currPlayer = this.currPlayer === this.player1 ? this.player2 : this.player1;
   }
 
   /** checkForWin: check board cell-by-cell for "does a win start here?" */
@@ -146,8 +150,33 @@ class Game {
   }
 }
 
+class Player {
+  constructor(number, color) {
+    this.number = number;
+    this.color = color;
+  }
+}
+
+const isColor = (strColor) => {
+  const s = new Option().style;
+  s.color = strColor;
+  return s.color !== '';
+}
+
 button = document.getElementById("start-game-button")
 button.onclick = () => {
   button.textContent = "Restart Game";
-  gameObj = new Game(6, 7);
+  let player1Color = document.getElementById("player1-color-input").value;
+  if (!isColor(player1Color)) {
+    alert("Cannot start game! Player 1 does not have a valid css color.");
+    return;
+  }
+  let player2Color = document.getElementById("player2-color-input").value;
+  if (!isColor(player2Color)) {
+    alert("Cannot start game! Player 2 does not have a valid css color.");
+    return;
+  }
+  let player1 = new Player(1, player1Color)
+  let player2 = new Player(2, player2Color)
+  gameObj = new Game(6, 7, player1, player2);
 }
