@@ -27,6 +27,7 @@ class Game {
   /** makeHtmlBoard: make HTML table and row of column tops. */
   makeHtmlBoard() {
     const board = document.getElementById('board');
+    board.innerHTML = '';
   
     // make column tops (clickable area for adding a piece to that column)
     const top = document.createElement('tr');
@@ -145,4 +146,8 @@ class Game {
   }
 }
 
-new Game(6, 7)
+button = document.getElementById("start-game-button")
+button.onclick = () => {
+  button.textContent = "Restart Game";
+  gameObj = new Game(6, 7);
+}
